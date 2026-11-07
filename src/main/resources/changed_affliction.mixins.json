@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.nitroless.changed_exposed.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "changed_affliction.refmap.json",
+  "mixins": [
+    "AttributePresetsMixin",
+    "ChangedGameRulesMixin",
+    "PaleMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

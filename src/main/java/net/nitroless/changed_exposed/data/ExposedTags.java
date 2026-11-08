@@ -7,6 +7,7 @@ import net.minecraft.world.item.Item;
 import net.nitroless.changed_exposed.ChangedExposed;
 
 // TODO: implement
+// also maybe datagen
 public class ExposedTags {
     public static class ItemTags {
         public static final TagKey<Item> light_pale_protection = tag("light_pale_protection");

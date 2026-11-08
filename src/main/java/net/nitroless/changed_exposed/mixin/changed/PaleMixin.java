@@ -31,17 +31,17 @@ public abstract class PaleMixin {
     private static void tickPaleExposureMixin(Player player, CallbackInfo ci) {
         // cancel early under specific conditions (taken directly from source)
         // i COULD probably target the logic closer but replacing the entire method is just much easier
-        // shouldn't cause an issues
-        if (Pale.isCured(player)) {
-            // JUST making super sure, although setting a value to itself every tick is a terrible idea
-            setPaleExposure(player, -1);
+        // shouldnt cause any issues
+
+        // TODO: replace isCured method because its stupid
+        if (Pale.isCured(player))
             ci.cancel();
-        }
         if (!player.level().getGameRules().getBoolean(ChangedGameRules.RULE_DO_PALE))
             ci.cancel();
         if (player.isCreative() || player.isSpectator())
             ci.cancel();
 
+        // TODO: review
         int exposure = Pale.getPaleExposure(player);
         final boolean isTransfurred = ProcessTransfur.isPlayerTransfurred(player);
         final boolean isLightProtected = EquipmentChecks.isLightPaleProtected(player);
@@ -104,6 +104,8 @@ public abstract class PaleMixin {
         if (ProcessTransfur.isPlayerTransfurred(player))
             return;
 
+        // TODO: implement damage config values + review
+        // (it should mostly be fine because its just copy pasted code from changed mod)
         // VVV effects VVV
         if (exposure >= PALE_STAGE1_THRESHOLD && exposure < PALE_STAGE2_THRESHOLD) {
             if (exposure % PALE_STAGE1_DMG_INTERVAL < 5) { // 1 Heart per 5 minutes

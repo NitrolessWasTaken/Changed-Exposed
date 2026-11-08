@@ -11,6 +11,7 @@ public class EquipmentChecks {
     // since i dont have a bajillion custom slots, there is no point in iterating through them
     // curios/accessories can fuck themselves lmao
     // changed mod provides its own method for checking equipment anyway
+    // TODO: test this, i dont trust myself
     public static boolean isLightPaleProtected(Player player) {
         ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
         ItemStack chestplate = player.getItemBySlot(EquipmentSlot.CHEST);

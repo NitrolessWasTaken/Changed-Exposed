@@ -12,6 +12,7 @@ import net.nitroless.changed_exposed.util.EquipmentChecks;
 
 import static net.ltxprogrammer.changed.process.Pale.*;
 
+// TODO: finish this
 // TODO: replace literals with translatables
 @Mod.EventBusSubscriber
 public class ExposedCommands {
@@ -125,6 +126,7 @@ public class ExposedCommands {
                                                         return 0;
                                                     }
 
+                                                    // TODO: hello missing logic
                                                     tryCure(player);
 
                                                     if (argument < 0)

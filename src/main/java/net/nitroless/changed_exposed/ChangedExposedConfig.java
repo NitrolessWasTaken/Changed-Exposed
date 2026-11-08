@@ -32,6 +32,8 @@ public class ChangedExposedConfig
 
     public static final ForgeConfigSpec.BooleanValue NERF_LATEX;
 
+    public static final ForgeConfigSpec.BooleanValue DEBUG;
+
     static {
         BUILDER.comment("Pale").push("pale");
 
@@ -40,58 +42,60 @@ public class ChangedExposedConfig
         BUILDER.comment("To reach terminal stage, the timer has to go through all stage timers combined.");
         PALE_INFECTED_THRESHOLD = BUILDER
                 .comment("How much you can be exposed to Pale before you become infected, measured in seconds. Timer increases when near entities that spread Pale.")
-                .defineInRange("paleImmuneMax", 60.0, 0.0, 28800.0);
+                .defineInRange("paleInfectedThreshold", 60.0, 0.0, 28800.0);
         PALE_STAGE1_THRESHOLD = BUILDER
                 .comment("How long until Pale advances to stage 1, measured in seconds.")
-                .defineInRange("paleMinimalDamageThreshold",1200.0,0.0,28800.0);
+                .defineInRange("paleStage1Threshold",1200.0,0.0,28800.0);
         PALE_STAGE2_THRESHOLD = BUILDER
                 .comment("How long until Pale advances to stage 2, measured in seconds.")
-                .defineInRange("paleSmallDamageThreshold",2400.0,0.0,28800.0);
+                .defineInRange("paleStage2Threshold",2400.0,0.0,28800.0);
         PALE_STAGE3_THRESHOLD = BUILDER
                 .comment("How long until Pale advances to stage 3, measured in seconds.")
-                .defineInRange("paleLargeDamageThreshold",3000.0,0.0,28800.0);
+                .defineInRange("paleStage3Threshold",3000.0,0.0,28800.0);
         PALE_TERMINAL_THRESHOLD = BUILDER
                 .comment("How long until Pale reaches terminal stage, measured in seconds.")
-                .defineInRange("paleDeathThreshold",3600.0,0.0,28800.0);
+                .defineInRange("paleTerminalThreshold",3600.0,0.0,28800.0);
         BUILDER.pop();
 
         BUILDER.comment("Damage timers").push("damageTimers");
         PALE_STAGE1_DMG_TIMER = BUILDER
-                .comment(xxxxx)
-                .defineInRange("",120.0,0.0,600.0);
+                .comment("How frequently you should take damage at stage 1, measured in seconds.")
+                .defineInRange("paleStage1DamageTimer",120.0,0.0,600.0);
         PALE_STAGE2_DMG_TIMER = BUILDER
-                .comment("")
-                .defineInRange("", ,0.0, );
+                .comment("How frequently you should take damage at stage 2, measured in seconds.")
+                .defineInRange("paleStage2DamageTimer",45.0,0.0,600.0);
         PALE_STAGE3_DMG_TIMER = BUILDER
-                .comment("")
-                .defineInRange("", ,0.0, );
+                .comment("How frequently you should take damage at stage 3, measured in seconds.")
+                .defineInRange("paleStage3DamageTimer",20.0,0.0,600.0);
         PALE_TERMINAL_DMG_TIMER = BUILDER
-                .comment("")
-                .defineInRange("", ,0.0, );
+                .comment("How frequently you should take damage at terminal stage,  measured in seconds.")
+                .defineInRange("paleTerminalDamageTimer",5.0,0.0,600.0);
         BUILDER.pop();
 
         BUILDER.comment("Damage amounts").push("damageAmounts");
         PALE_STAGE1_DMG = BUILDER
-                .comment(xxxx)
-                .defineInRange("",1,0,100);
+                .comment("How much damage you take at stage 1, measured in half hearts.")
+                .defineInRange("paleStage1Damage",1,0,100);
         PALE_STAGE2_DMG = BUILDER
-                .comment(xxxx)
-                .defineInRange("",1,0,100);
+                .comment("How much damage you take at stage 2, measured in half hearts.")
+                .defineInRange("paleStage2Damage",1,0,100);
         PALE_STAGE3_DMG = BUILDER
-                .comment(xxxx)
-                .defineInRange("",2,0,100);
+                .comment("How much damage you take at stage 3, measured in half hearts.")
+                .defineInRange("paleStage3Damage",2,0,100);
         PALE_TERMINAL_DMG = BUILDER
-                .comment(xxxx)
-                .defineInRange("",2,0,100);
+                .comment("How much damage you take at terminal stage, measured in half hearts.")
+                .defineInRange("paleStage4Damage",2,0,100);
 
         BUILDER.pop();
         // exited pale category, we are on top level
 
         BUILDER.comment("Latex").push("latex");
         NERF_LATEX = BUILDER
-                .comment(xxxx)
-                .define("NERF_LATEX", true);
+                .comment("Whether to nerf latex attributes. Recommended to keep on.")
+                .define("nerfLatex", true);
         BUILDER.pop();
+
+        DEBUG = BUILDER.comment("Guess fucking what this is").comment("Do not turn this on unless specifically requested").define("debug", false);
     }
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
@@ -105,22 +109,23 @@ public class ChangedExposedConfig
     static void onLoad(final ModConfigEvent event)
     {
         // don't @ me
-        ChangedExposed.LOGGER.debug("PALE_INFECTED_THRESHOLD = " + PALE_INFECTED_THRESHOLD.toString());
-        ChangedExposed.LOGGER.debug("PALE_STAGE1_THRESHOLD = " +  PALE_STAGE1_THRESHOLD.toString());
-        ChangedExposed.LOGGER.debug("PALE_STAGE2_THRESHOLD = " +  PALE_STAGE2_THRESHOLD.toString());
-        ChangedExposed.LOGGER.debug("PALE_STAGE3_THRESHOLD = " +  PALE_STAGE3_THRESHOLD.toString());
-        ChangedExposed.LOGGER.debug("PALE_TERMINAL_THRESHOLD = " +  PALE_TERMINAL_THRESHOLD.toString());
+        // ...so toString() did NOT mean what i thought it did
+        ChangedExposed.LOGGER.debug("PALE_INFECTED_THRESHOLD = " + PALE_INFECTED_THRESHOLD.get());
+        ChangedExposed.LOGGER.debug("PALE_STAGE1_THRESHOLD = " +  PALE_STAGE1_THRESHOLD.get());
+        ChangedExposed.LOGGER.debug("PALE_STAGE2_THRESHOLD = " +  PALE_STAGE2_THRESHOLD.get());
+        ChangedExposed.LOGGER.debug("PALE_STAGE3_THRESHOLD = " +  PALE_STAGE3_THRESHOLD.get());
+        ChangedExposed.LOGGER.debug("PALE_TERMINAL_THRESHOLD = " +  PALE_TERMINAL_THRESHOLD.get());
 
-        ChangedExposed.LOGGER.debug("PALE_STAGE1_DMG_TIMER = " + PALE_STAGE1_DMG_TIMER.toString());
-        ChangedExposed.LOGGER.debug("PALE_STAGE2_DMG_TIMER = " + PALE_STAGE2_DMG_TIMER.toString());
-        ChangedExposed.LOGGER.debug("PALE_STAGE3_DMG_TIMER = " + PALE_STAGE3_DMG_TIMER.toString());
-        ChangedExposed.LOGGER.debug("PALE_TERMINAL_DMG_TIMER = " + PALE_TERMINAL_DMG_TIMER.toString());
+        ChangedExposed.LOGGER.debug("PALE_STAGE1_DMG_TIMER = " + PALE_STAGE1_DMG_TIMER.get());
+        ChangedExposed.LOGGER.debug("PALE_STAGE2_DMG_TIMER = " + PALE_STAGE2_DMG_TIMER.get());
+        ChangedExposed.LOGGER.debug("PALE_STAGE3_DMG_TIMER = " + PALE_STAGE3_DMG_TIMER.get());
+        ChangedExposed.LOGGER.debug("PALE_TERMINAL_DMG_TIMER = " + PALE_TERMINAL_DMG_TIMER.get());
 
-        ChangedExposed.LOGGER.debug("PALE_STAGE1_DMG = " + PALE_STAGE1_DMG.toString());
-        ChangedExposed.LOGGER.debug("PALE_STAGE2_DMG = " + PALE_STAGE2_DMG.toString());
-        ChangedExposed.LOGGER.debug("PALE_STAGE3_DMG = " + PALE_STAGE3_DMG.toString());
-        ChangedExposed.LOGGER.debug("PALE_TERMINAL_DMG = " + PALE_TERMINAL_DMG.toString());
+        ChangedExposed.LOGGER.debug("PALE_STAGE1_DMG = " + PALE_STAGE1_DMG.get());
+        ChangedExposed.LOGGER.debug("PALE_STAGE2_DMG = " + PALE_STAGE2_DMG.get());
+        ChangedExposed.LOGGER.debug("PALE_STAGE3_DMG = " + PALE_STAGE3_DMG.get());
+        ChangedExposed.LOGGER.debug("PALE_TERMINAL_DMG = " + PALE_TERMINAL_DMG.get());
 
-        ChangedExposed.LOGGER.debug("NERF_LATEX = " + NERF_LATEX.toString());
+        ChangedExposed.LOGGER.debug("NERF_LATEX = " + NERF_LATEX.get());
     }
 }

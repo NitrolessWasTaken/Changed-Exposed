@@ -5,9 +5,10 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "changed_affliction.refmap.json",
   "mixins": [
-    "AttributePresetsMixin",
-    "ChangedGameRulesMixin",
-    "PaleMixin"
+    "changed.AttributePresetsMixin",
+    "changed.ChangedGameRulesMixin",
+    "changed.PaleMixin",
+    "minecraft.PlayerMixin"
   ],
   "client": [
   ],

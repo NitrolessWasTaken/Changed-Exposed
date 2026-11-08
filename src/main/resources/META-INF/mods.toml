@@ -64,6 +64,6 @@ side = "BOTH"
 [[dependencies."${mod_id}"]]
 modId="changed"
 mandatory=true
-versionRange="[\"${changed_version}\"]" # Replace with the version you plan to mod
+versionRange="[${changed_version}]"
 ordering="NONE"
 side="BOTH"

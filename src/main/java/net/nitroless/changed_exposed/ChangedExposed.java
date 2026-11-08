@@ -2,20 +2,18 @@ package net.nitroless.changed_exposed;
 
 import com.mojang.logging.LogUtils;
 import net.ltxprogrammer.changed.Changed;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -70,12 +68,12 @@ public class ChangedExposed {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         // Some common setup code
-        LOGGER.info("im changing it!!!!!!!");
-        Changed.LOGGER.info("(changed_exposed) hello ltxprogrammer");
+        LOGGER.info("exposure in progress");
+        Changed.LOGGER.info("(changed_exposed) hello changed mod logger. this is a good sign!");
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.EXPOSED) event.accept(EXAMPLE_BLOCK_ITEM);
+        if (event.getTabKey() == ChangedExposed.EXPOSED.getKey()) event.accept(EXAMPLE_BLOCK_ITEM);
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
@@ -83,6 +81,11 @@ public class ChangedExposed {
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
         // LOGGER.info("");
+    }
+
+    @SubscribeEvent
+    public void onServerStarted(ServerStartedEvent event) {
+        LOGGER.info("hello minecraft world");
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent

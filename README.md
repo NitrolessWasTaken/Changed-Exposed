@@ -8,9 +8,10 @@ An addon mod for the [Changed Minecraft Mod](https://github.com/LtxProgrammer/Ch
 | Pale centric Changed structures & facility rooms |  🟥  |
 | Equipment to create a cure |  🟥  |
 | Latex forms rebalance |  🟥  |
+| Support for various addons |  🟥  |
 
 and probably more...
 
 ### Links
-[CurseForge](https://www.curseforge.com/minecraft/mc-mods/changed-exposed)
+[CurseForge](https://www.curseforge.com/minecraft/mc-mods/changed-exposed)  
 [Modrith](https://modrinth.com/project/changed-exposed)

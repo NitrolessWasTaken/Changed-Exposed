@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(ChangedGameRules.class)
 public class ChangedGameRulesMixin {
-    @ModifyArg(method = "<clinit>", remap = false, at = @At(
+    @ModifyArg(method = "<clinit>", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/GameRules$BooleanValue;create(Z)Lnet/minecraft/world/level/GameRules$Type;",
             ordinal = 1

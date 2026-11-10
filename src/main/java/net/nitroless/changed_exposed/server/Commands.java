@@ -1,38 +1,40 @@
-package net.nitroless.changed_exposed;
+package net.nitroless.changed_exposed.server;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.nitroless.changed_exposed.ChangedExposed;
+import net.nitroless.changed_exposed.ChangedExposedConfig;
 import net.nitroless.changed_exposed.util.EquipmentChecks;
 
 import static net.ltxprogrammer.changed.process.Pale.*;
+import static net.minecraft.commands.Commands.*;
 
 // TODO: finish this
-// TODO: replace literals with translatables
 @Mod.EventBusSubscriber
-public class ExposedCommands {
+public class Commands {
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         event.getDispatcher().register(
                 // register main command
                 // /changed_exposed
-                Commands.literal("changed_exposed")
+                literal("changed_exposed")
                         // test command
                         // /changed_exposed test
-                        .then(Commands.literal("test")).executes(context -> {
-                            context.getSource().sendSuccess(() -> Component
-                                    .translatable("changed_exposed.command.test"), true);
-                            return 1;
-                        })
+                        .then(literal("test")
+                                .executes(context -> {
+                                    context.getSource().sendSuccess(() -> Component
+                                        .translatable("changed_exposed.command.test"), true);
+                                    return 1;
+                        }))
 
                         // dump a bunch of info during runtime :3
                         // /changed_exposed dumpDebugInfo
-                        .then(Commands.literal("dumpDebugInfo")
+                        .then(literal("dumpDebugInfo")
                                 .requires(player -> player.hasPermission(2))
                                 .executes(context -> {
                                     var executor = context.getSource();
@@ -40,6 +42,11 @@ public class ExposedCommands {
                                     // only works if debug mode is enabled
                                     // this is because it it shows some gameplay critical information
                                     if (ChangedExposedConfig.DEBUG.get()) {
+                                        if (executor.getPlayer() == null) {
+                                            executor.sendFailure(Component.translatable("changed_exposed.command.dumpDebugInfo.invalid"));
+                                            return 0;
+                                        }
+
                                         executor.sendSystemMessage(Component
                                                 .translatable("changed_exposed.command.dumpDebugInfo.dumping"));
 
@@ -87,14 +94,14 @@ public class ExposedCommands {
 
                         // register setPaleExposure
                         // /changed_exposed setPaleExposure
-                        .then(Commands.literal("setPaleExposure")
+                        .then(literal("setPaleExposure")
                                 .requires(player -> player.hasPermission(2))
                                 // add player argument
                                 // /changed_exposed setPaleExposure <player>
-                                .then(Commands.argument("player", EntityArgument.player())
+                                .then(argument("player", EntityArgument.player())
                                         // add tick amount argument
                                         // /changed_exposed setPaleExposure <player> <exposure>
-                                        .then(Commands.argument("exposure", IntegerArgumentType.integer(-576000, 576000))
+                                        .then(argument("exposure", IntegerArgumentType.integer(-576000, 576000))
                                                 .executes(context -> {
                                                     int argument = IntegerArgumentType.getInteger(context, "exposure");
                                                     Player player = EntityArgument.getPlayer(context, "player");
@@ -117,8 +124,8 @@ public class ExposedCommands {
                         )
 
                         // register subcommand curePale
-                        .then(Commands.literal("curePale").requires(player -> player.hasPermission(2))
-                                .then(Commands.argument("player", EntityArgument.player())
+                        .then(literal("curePale").requires(player -> player.hasPermission(2))
+                                .then(argument("player", EntityArgument.player())
                                         .executes(context -> {
                                             Player player = EntityArgument.getPlayer(context, "player");
 

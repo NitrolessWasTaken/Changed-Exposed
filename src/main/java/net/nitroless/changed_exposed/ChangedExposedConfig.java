@@ -30,6 +30,10 @@ public class ChangedExposedConfig
     public static final ForgeConfigSpec.IntValue PALE_STAGE3_DMG;
     public static final ForgeConfigSpec.IntValue PALE_TERMINAL_DMG;
 
+    public static final ForgeConfigSpec.DoubleValue PALE_EFFECTIVITY_RANGE;
+
+    public static final ForgeConfigSpec.IntValue PALE_CURE_CHANCE;
+
     public static final ForgeConfigSpec.BooleanValue NERF_LATEX;
 
     public static final ForgeConfigSpec.BooleanValue DEBUG;
@@ -38,11 +42,11 @@ public class ChangedExposedConfig
         BUILDER.comment("Pale").push("pale");
 
         BUILDER.comment("Infection thresholds").push("thresholds");
-        BUILDER.comment("Note: Timers are stacked on top of each other.");
-        BUILDER.comment("To reach terminal stage, the timer has to go through all stage timers combined.");
+        BUILDER.comment("Note: Thresholds are stacked on top of each other.");
+        BUILDER.comment("To reach terminal stage, the timer has to go through all stages combined.");
         PALE_INFECTED_THRESHOLD = BUILDER
                 .comment("How much you can be exposed to Pale before you become infected, measured in seconds. Timer increases when near entities that spread Pale.")
-                .defineInRange("paleInfectedThreshold", 60.0, 0.0, 28800.0);
+                .defineInRange("paleInfectedThreshold", 200.0, 0.0, 28800.0);
         PALE_STAGE1_THRESHOLD = BUILDER
                 .comment("How long until Pale advances to stage 1, measured in seconds.")
                 .defineInRange("paleStage1Threshold",1200.0,0.0,28800.0);
@@ -85,6 +89,15 @@ public class ChangedExposedConfig
         PALE_TERMINAL_DMG = BUILDER
                 .comment("How much damage you take at terminal stage, measured in half hearts.")
                 .defineInRange("paleStage4Damage",2,0,100);
+        BUILDER.pop();
+
+        PALE_EFFECTIVITY_RANGE = BUILDER
+                .comment("The range at which Pale transmits, in blocks. Accepts fractions.")
+                .defineInRange("paleEffectiveRange", 3.0, 0.0, 10.0);
+
+        PALE_CURE_CHANCE = BUILDER
+                .comment("The chance for the imperfect cure to work. (Currently does nothing.)")
+                .defineInRange("paleImperfectCureChance", 30, 0, 100);
 
         BUILDER.pop();
         // exited pale category, we are on top level
@@ -95,37 +108,42 @@ public class ChangedExposedConfig
                 .define("nerfLatex", true);
         BUILDER.pop();
 
-        DEBUG = BUILDER.comment("Guess fucking what this is").comment("Do not turn this on unless specifically requested").define("debug", false);
+        DEBUG = BUILDER.comment("Do not turn this on unless specifically requested").define("debug", false);
     }
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
     private static boolean validateItemName(final Object obj)
     {
-        return obj instanceof final String itemName && ForgeRegistries.ITEMS.containsKey(new ResourceLocation(itemName));
+        return obj instanceof final String itemName && ForgeRegistries.ITEMS.containsKey(ResourceLocation.parse(itemName));
     }
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event)
     {
-        // don't @ me
-        // ...so toString() did NOT mean what i thought it did
-        ChangedExposed.LOGGER.debug("PALE_INFECTED_THRESHOLD = " + PALE_INFECTED_THRESHOLD.get());
-        ChangedExposed.LOGGER.debug("PALE_STAGE1_THRESHOLD = " +  PALE_STAGE1_THRESHOLD.get());
-        ChangedExposed.LOGGER.debug("PALE_STAGE2_THRESHOLD = " +  PALE_STAGE2_THRESHOLD.get());
-        ChangedExposed.LOGGER.debug("PALE_STAGE3_THRESHOLD = " +  PALE_STAGE3_THRESHOLD.get());
-        ChangedExposed.LOGGER.debug("PALE_TERMINAL_THRESHOLD = " +  PALE_TERMINAL_THRESHOLD.get());
+        if (DEBUG.get()) {
+            // don't @ me
+            // ...so toString() did NOT mean what i thought it did
+            ChangedExposed.LOGGER.debug("PALE_INFECTED_THRESHOLD = " + PALE_INFECTED_THRESHOLD.get());
+            ChangedExposed.LOGGER.debug("PALE_STAGE1_THRESHOLD = " + PALE_STAGE1_THRESHOLD.get());
+            ChangedExposed.LOGGER.debug("PALE_STAGE2_THRESHOLD = " + PALE_STAGE2_THRESHOLD.get());
+            ChangedExposed.LOGGER.debug("PALE_STAGE3_THRESHOLD = " + PALE_STAGE3_THRESHOLD.get());
+            ChangedExposed.LOGGER.debug("PALE_TERMINAL_THRESHOLD = " + PALE_TERMINAL_THRESHOLD.get());
 
-        ChangedExposed.LOGGER.debug("PALE_STAGE1_DMG_TIMER = " + PALE_STAGE1_DMG_TIMER.get());
-        ChangedExposed.LOGGER.debug("PALE_STAGE2_DMG_TIMER = " + PALE_STAGE2_DMG_TIMER.get());
-        ChangedExposed.LOGGER.debug("PALE_STAGE3_DMG_TIMER = " + PALE_STAGE3_DMG_TIMER.get());
-        ChangedExposed.LOGGER.debug("PALE_TERMINAL_DMG_TIMER = " + PALE_TERMINAL_DMG_TIMER.get());
+            ChangedExposed.LOGGER.debug("PALE_STAGE1_DMG_TIMER = " + PALE_STAGE1_DMG_TIMER.get());
+            ChangedExposed.LOGGER.debug("PALE_STAGE2_DMG_TIMER = " + PALE_STAGE2_DMG_TIMER.get());
+            ChangedExposed.LOGGER.debug("PALE_STAGE3_DMG_TIMER = " + PALE_STAGE3_DMG_TIMER.get());
+            ChangedExposed.LOGGER.debug("PALE_TERMINAL_DMG_TIMER = " + PALE_TERMINAL_DMG_TIMER.get());
 
-        ChangedExposed.LOGGER.debug("PALE_STAGE1_DMG = " + PALE_STAGE1_DMG.get());
-        ChangedExposed.LOGGER.debug("PALE_STAGE2_DMG = " + PALE_STAGE2_DMG.get());
-        ChangedExposed.LOGGER.debug("PALE_STAGE3_DMG = " + PALE_STAGE3_DMG.get());
-        ChangedExposed.LOGGER.debug("PALE_TERMINAL_DMG = " + PALE_TERMINAL_DMG.get());
+            ChangedExposed.LOGGER.debug("PALE_STAGE1_DMG = " + PALE_STAGE1_DMG.get());
+            ChangedExposed.LOGGER.debug("PALE_STAGE2_DMG = " + PALE_STAGE2_DMG.get());
+            ChangedExposed.LOGGER.debug("PALE_STAGE3_DMG = " + PALE_STAGE3_DMG.get());
+            ChangedExposed.LOGGER.debug("PALE_TERMINAL_DMG = " + PALE_TERMINAL_DMG.get());
 
-        ChangedExposed.LOGGER.debug("NERF_LATEX = " + NERF_LATEX.get());
+            ChangedExposed.LOGGER.debug("PALE_EFFECTIVITY_RANGE = " + PALE_EFFECTIVITY_RANGE.get());
+            ChangedExposed.LOGGER.debug("PALE_CURE_CHANCE = " + PALE_CURE_CHANCE.get());
+
+            ChangedExposed.LOGGER.debug("NERF_LATEX = " + NERF_LATEX.get());
+        }
     }
 }

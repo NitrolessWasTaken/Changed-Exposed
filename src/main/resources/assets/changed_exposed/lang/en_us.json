@@ -1,0 +1,11 @@
+{
+  "changed_exposed.command.test": "Test command ran! Yay!",
+  "changed_exposed.command.dumpDebugInfo.invalid": "Invalid target; execution origin is not a player.",
+  "changed_exposed.command.dumpDebugInfo.dumping": "Dumping debug info...",
+  "changed_exposed.command.dumpDebugInfo.finished": "Finished. Check your logs.",
+  "changed_exposed.command.dumpDebugInfo.noDebug1": "Enable debug in the config to use.\n",
+  "changed_exposed.command.dumpDebugInfo.noDebug2": "You likely won't need this unless making a bug report.",
+  "changed_exposed.command.setPaleExposure.alreadyCured": "%1$s is already cured; nothing to do.",
+  "changed_exposed.command.setPaleExposure.possiblyWrongCommandNote": "NOTE: This does not cure Pale. Did you mean to use \"/changed_exposed curePale <player>\"?",
+  "changed_exposed.debug.cured": "Cured"
+}

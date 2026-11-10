@@ -101,6 +101,18 @@ repositories {
         name = "Changed"
         url = "https://ltxprogrammer.github.io/maven/"
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        forRepositories(fg.repository) // Uncomment when using ForgeGradle
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 dependencies {
@@ -111,8 +123,10 @@ dependencies {
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.5")) {
         jarJar.ranged(it, "[0.5.5,)")
     }
+    // runtimeOnly "maven.modrinth:1jDdpgcc:LWHzkwbX" // carbon config
+    runtimeOnly "maven.modrinth:5WeWGLoJ:YUDLu26S" // forge config screens
 
-    implementation fg.deobf("net.ltxprogrammer.changed:Changed-m${minecraft_version}-f${forge_version}:v${changed_version}")
+    implementation fg.deobf("net.ltxprogrammer.changed:Changed-m${minecraft_version}-f47.4.0:v${changed_version}")
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
     // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")

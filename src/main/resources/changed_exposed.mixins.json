@@ -3,12 +3,12 @@
   "minVersion": "0.8",
   "package": "net.nitroless.changed_exposed.mixin",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "changed_affliction.refmap.json",
+  "refmap": "changed_exposed.refmap.json",
   "mixins": [
     "changed.AttributePresetsMixin",
     "changed.ChangedGameRulesMixin",
-    "changed.PaleMixin",
-    "minecraft.PlayerMixin"
+    "changed.CommandPaleMixin",
+    "changed.PaleMixin"
   ],
   "client": [
   ],
